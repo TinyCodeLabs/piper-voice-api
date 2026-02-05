@@ -7,11 +7,11 @@ from pathlib import Path
 import wave
 from piper import PiperVoice, SynthesisConfig
 
-VOICE_PATH = "/home/tim/projects/piper-voice-api/piper-tts/voices/"
+VOICE_PATH = "/app/voices/"
 DEFAULT_VOICE = "de_DE-thorsten-medium"
 
-AUDIO_PATH = "./out/"
-SOCKET_PATH = "/tmp/tts.sock"
+AUDIO_PATH = "/app/out/"
+SOCKET_PATH = "/app/tts.sock"
 
 VOICE_CACHE: dict[str, PiperVoice] = {}
 
