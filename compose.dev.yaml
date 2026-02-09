@@ -1,0 +1,9 @@
+services:
+  tts:
+    build:
+      context: ./piper-tts
+    user: "10001:10001"
+    volumes:
+      - ./run:/app/run
+      - ./piper-tts/voices:/app/voices
+      - ./out:/app/out

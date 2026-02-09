@@ -1,0 +1,13 @@
+services:
+  tts:
+    image: piper-tts
+    user: "10001:10001"
+    volumes:
+      - run:/app/run
+      - voices:/app/voices
+      - out:/app/out
+
+volumes:
+  voices:
+  out:
+  run:
