@@ -11,7 +11,7 @@ VOICE_PATH = "/app/voices/"
 DEFAULT_VOICE = "de_DE-thorsten-medium"
 
 AUDIO_PATH = "/app/out/"
-SOCKET_PATH = "/app/tts.sock"
+SOCKET_PATH = "/app/run/tts.sock"
 
 VOICE_CACHE: dict[str, PiperVoice] = {}
 
@@ -65,12 +65,14 @@ def main():
     if not os.path.exists(AUDIO_PATH):
         os.makedirs(AUDIO_PATH)
 
+    os.makedirs("/app/run", exist_ok=True)
     # Establish socket connection
     if os.path.exists(SOCKET_PATH):
         os.unlink(SOCKET_PATH)
 
     sock = socket.socket(socket.AF_UNIX, socket.SOCK_STREAM)
     sock.bind(SOCKET_PATH)
+    os.chmod(SOCKET_PATH, 0o660)
     sock.listen(5)
 
     print(f"Piper TTS socket listening on {SOCKET_PATH}")
