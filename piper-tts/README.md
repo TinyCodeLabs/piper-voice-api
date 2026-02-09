@@ -41,7 +41,7 @@ sudo chown 10001:10001 run
 
 ## Fill with voices
 
-Put the voices, the `ONNX` and their `JSON` Files into the `/app/voices` folder.
+Put the voices, the `ONNX` and their `JSON` Files into the `/app/voices` folder inside the container.
 
 ## Test the API
 
