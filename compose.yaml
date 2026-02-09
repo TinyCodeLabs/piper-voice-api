@@ -1,6 +1,6 @@
 services:
   tts:
-    image: piper-tts
+    image: ghcr.io/tinycodelabs/piper-voice-tts:latest
     user: "10001:10001"
     volumes:
       - run:/app/run

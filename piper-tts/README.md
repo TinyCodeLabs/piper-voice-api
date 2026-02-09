@@ -2,6 +2,13 @@
 
 Locally hosted TTS Service using Piper-TTS at it's core. It exposes the engine via a UNIX-Socket as a sort of API.
 
+## Build and publish docker
+
+```sh
+docker build -t ghcr.io/tinycodelabs/piper-voice-tts:latest .
+docker push ghcr.io/tinycodelabs/piper-voice-tts:latest
+```
+
 ## Develop locally
 
 To develop locally, you have to create a python venv and activate it

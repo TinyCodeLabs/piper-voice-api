@@ -1,7 +1,11 @@
 # syntax=docker/dockerfile:1
 
+
 ARG PYTHON_VERSION=3.12.3
-FROM python:${PYTHON_VERSION}-slim as base
+FROM python:${PYTHON_VERSION}-slim AS base
+
+LABEL org.opencontainers.image.source="https://github.com/TinyCodeLabs/piper-voice-api"
+LABEL org.opencontainers.image.description="Python UNIX Socket wrapper for piper-tts"
 
 ENV PYTHONDONTWRITEBYTECODE=1
 ENV PYTHONUNBUFFERED=1
