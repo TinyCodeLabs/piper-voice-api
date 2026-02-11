@@ -4,6 +4,7 @@ import os
 import socket
 import time
 from pathlib import Path
+import traceback
 import wave
 from piper import PiperVoice, SynthesisConfig
 
@@ -31,7 +32,7 @@ def generate_tts(text: str, filename: str, voice: PiperVoice, syn_config: Synthe
 
 def handle_request(data: dict) -> dict:
     text = data.get("text", "")
-    voice = data.get("voice", DEFAULT_VOICE)
+    voicename = data.get("voice", DEFAULT_VOICE)
     # speed = float(data.get("speed", DEFAULT_SPEED))
     filename = data.get("filename", f"output_{int(time.time())}.wav")
 
@@ -42,13 +43,13 @@ def handle_request(data: dict) -> dict:
     #     text = ssml_to_text(text)
    
     # Load the voice model
-    voice = get_voice(VOICE_PATH + voice + ".onnx")
+    voice = get_voice(VOICE_PATH + voicename + ".onnx")
 
     # Configure synthesis parameters
     syn_config = SynthesisConfig(
         length_scale=1.0,
     )
-
+    print(voicename, filename, " - ", text)
     # Generate Audio
     generate_tts(text, filename, voice, syn_config)
 
@@ -61,12 +62,22 @@ def safe_send(conn, payload: dict):
         pass
 
 def main():
-    # Ensure the output directory exists
-    if not os.path.exists(AUDIO_PATH):
-        os.makedirs(AUDIO_PATH)
+    while True:
+        try:
+            run_server()
+        except Exception as e:
+            print("🔥 Server crashed:", e)
+            traceback.print_exc()
+            print("Restarting socket in 2 seconds...")
+            time.sleep(2)
 
+
+def run_server():
+    # Ensure output directory exists
+    os.makedirs(AUDIO_PATH, exist_ok=True)
     os.makedirs("/app/run", exist_ok=True)
-    # Establish socket connection
+
+    # Remove stale socket file
     if os.path.exists(SOCKET_PATH):
         os.unlink(SOCKET_PATH)
 
@@ -79,18 +90,24 @@ def main():
 
     while True:
         conn, _ = sock.accept()
-        try:
-            while True:
-                raw = conn.recv(1024 * 1024)               
+        print("Client connected")
 
-                try:
-                    data = json.loads(raw.decode("utf-8"))
-                    result = handle_request(data)
-                    safe_send(conn, result)
-                except Exception as e:
-                    safe_send(conn, {"status": "error", "error": str(e)})
-        finally:
-            conn.close()   
+        with conn:
+            try:
+                raw = conn.recv(1024 * 1024)
+
+                if not raw:
+                    # Client closed connection immediately
+                    continue
+
+                data = json.loads(raw.decode("utf-8"))
+                result = handle_request(data)
+                safe_send(conn, result)
+
+            except Exception as e:
+                safe_send(conn, {"status": "error", "error": str(e)})
+
+        print("Client disconnected")
 
 if __name__ == "__main__":
     main()

@@ -7,3 +7,19 @@ services:
       - ./run:/app/run
       - ./piper-tts/voices:/app/voices
       - ./out:/app/out
+  app:
+    build:
+      context: ./api
+      dockerfile: Dockerfile.dev
+    user: "10001:10001"
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./api/src:/app/src
+      - ./api/node_modules:/app/node_modules
+      - ./run:/app/run
+      - ./out:/app/out
+      - ./piper-tts/voices:/app/voices
+    environment:
+      - NODE_ENV=development
+      - DELETE_SECONDS=10
