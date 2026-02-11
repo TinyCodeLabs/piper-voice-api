@@ -13,6 +13,7 @@ app.use(express.json());
 const SOCKET_PATH = "/app/run/tts.sock";
 const OUTPUT_DIR = "/app/out";
 const VOICES_DIR = "/app/voices";
+const VOICES_IMPORT = "/app/voices_import";
 const DELETE_SEC = process.env.DELETE_SECONDS || 1000;
 console.log("Deleting files", DELETE_SEC, "after they are created");
 const PORT = 3000;
@@ -185,7 +186,8 @@ app.get("/tts/:id/audio", (req, res) => {
   res.sendFile(path.resolve(job.file));
 });
 
-// --------------------
+process.on("uncaughtExeption", (err) => console.log(err));
+
 app.listen(PORT, () => {
   console.log(`🚀 TTS API running on http://localhost:${PORT}`);
   setInterval(collectGarbage, 5000);
