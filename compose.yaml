@@ -3,19 +3,19 @@ services:
     image: ghcr.io/tinycodelabs/piper-voice-tts:latest
     user: "10001:10001"
     volumes:
-      - run:/app/run
-      - voices:/app/voices
-      - out:/app/out
+      - ./run:/app/run
+      - ./voices_import:/app/voices
+      - ./out:/app/out
   app:
     image: ghcr.io/tinycodelabs/piper-voice-api:latest
     user: "10001:10001"
     ports:
       - "3000:3000"
     volumes:
-      - run:/app/run
-      - out:/app/out
-      - voices:/app/voices
-      - ./voices_import:/app/voices_import
+      - ./run:/app/run
+      - ./out:/app/out
+      - ./voices_import:/app/voices
+      # - ./voices_import:/app/voices_import
     environment:
       - NODE_ENV=development
       - DELETE_SECONDS=1000

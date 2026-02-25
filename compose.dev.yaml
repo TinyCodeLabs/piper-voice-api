@@ -5,7 +5,7 @@ services:
     user: "10001:10001"
     volumes:
       - ./run:/app/run
-      - ./piper-tts/voices:/app/voices
+      - ./voices_import:/app/voices
       - ./out:/app/out
   app:
     build:
@@ -19,7 +19,7 @@ services:
       - ./api/node_modules:/app/node_modules
       - ./run:/app/run
       - ./out:/app/out
-      - ./piper-tts/voices:/app/voices
+      - ./voices_import:/app/voices
       - ./voices_import:/app/voices_import
     environment:
       - NODE_ENV=development
